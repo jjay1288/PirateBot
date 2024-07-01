@@ -2,19 +2,20 @@ import discord
 from discord.ext import commands
 import json
 import os
-import aiohttp
+from datetime import datetime
 
 class InviteTracker(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.invites = {}
+        self.log_file = '/app/data/invite_usage.log'  # Log file path
         self.load_invites()
 
     def load_invites(self):
         print("Checking if invites.json exists...")
-        if os.path.exists('invites.json'):
+        if os.path.exists('/app/data/invites.json'):
             print("invites.json found. Loading invites...")
-            with open('invites.json', 'r') as f:
+            with open('/app/data/invites.json', 'r') as f:
                 self.invites = json.load(f)
             print("Invites loaded successfully.")
         else:
@@ -23,9 +24,15 @@ class InviteTracker(commands.Cog):
 
     def save_invites(self):
         print("Saving invites to invites.json...")
-        with open('invites.json', 'w') as f:
+        with open('/app/data/invites.json', 'w') as f:
             json.dump(self.invites, f, indent=4)
         print("Invites saved successfully.")
+
+    def log_invite_usage(self, invite_code, member_name):
+        log_entry = f"{datetime.now()} - Invite {invite_code} used by {member_name}\n"
+        print(log_entry.strip())  # Print the log entry for debugging
+        with open(self.log_file, 'a') as log:
+            log.write(log_entry)
 
     @commands.command(name='getinvites')
     async def getinvites_command(self, ctx):
@@ -69,6 +76,7 @@ class InviteTracker(commands.Cog):
                     self.invites[invite.code]['uses'] = invite.uses
                     self.invites[invite.code]['last_used_by'] = member.name
                     self.save_invites()
+                    self.log_invite_usage(invite.code, member.name)
                     print(f"Invite {invite.code} used by {member.name}. Updated invite info.")
                     break
         except Exception as e:
@@ -78,16 +86,35 @@ class InviteTracker(commands.Cog):
     async def lastinvite_command(self, ctx):
         print("Processing lastinvite command...")
         last_invite = None
-        for invite in self.invites.values():
+        last_code = None
+        for code, invite in self.invites.items():
             if 'last_used_by' in invite:
                 last_invite = invite
+                last_code = code
                 break
 
         if last_invite:
-            await ctx.send(f"Last invite used by: {last_invite['last_used_by']} (Inviter: {last_invite['inviter']})")
+            await ctx.send(f"Last invite used by: {last_invite['last_used_by']} (Inviter: {last_invite['inviter']}, Code: {last_code})")
         else:
             await ctx.send("No invites have been used yet.")
         print("lastinvite command processed.")
+
+    @commands.command(name='invitelog')
+    async def invitelog_command(self, ctx):
+        print("Processing invitelog command...")
+        if os.path.exists(self.log_file):
+            with open(self.log_file, 'r') as log:
+                log_content = log.readlines()
+
+            # Create an embed
+            embed = discord.Embed(title="Invite Usage Log", color=0x00ff00)
+            for line in log_content[-10:]:  # Show last 10 entries to avoid embed limits
+                embed.add_field(name="\u200b", value=line, inline=False)
+                
+            await ctx.send(embed=embed)
+        else:
+            await ctx.send("No log file found.")
+        print("invitelog command processed.")
 
 async def setup(bot):
     await bot.add_cog(InviteTracker(bot))
