@@ -8,10 +8,10 @@
 
 - When a new member joins the server using an invite link, PirateBot will log the invite details and notify the bot channel.
 
-  ### Viewing the Invite Log
+### Viewing the Invite Log
 
-  1. Type `/invitelog` in the server where PirateBot is active.
-  2. PirateBot will display the last 10 invites used, along with the invite code, referrer, and user.
+1. Type `/invitelog` in the server where PirateBot is active.
+2. PirateBot will display the last 10 invites used, along with the invite code, referrer, and user.
 
 ### Generating a Roster
 
