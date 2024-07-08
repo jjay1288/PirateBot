@@ -1,44 +1,61 @@
-import json
-import discord
-from discord.ext import commands
+"""
+Main script to run
+
+This script initializes extensions and starts the bot
+"""
 import os
+import sys
 
-class MyBot(commands.Bot):
-    async def setup_hook(self):
-        await self.load_extensions()
+import interactions
+from dotenv import load_dotenv
 
-    async def load_extensions(self):
-        print("Loading extensions from ./cogs")
-        for filename in os.listdir("./cogs"):
-            if filename.endswith(".py"):
-                print(f"Loading extension: {filename}")
-                await self.load_extension(f"cogs.{filename[:-3]}")
-        print("Extensions loaded successfully")
+from config import DEBUG, DEV_GUILD
+from src import logutil
 
-async def main():
-    print("Loading secrets from client_secrets.json")
-    with open('client_secrets.json') as f:
-        secrets = json.load(f)
-    
-    bot_token = secrets['bot_token']
-    guild_id = int(secrets['guild_id'])
+load_dotenv()
 
-    print("Creating bot instance")
-    intents = discord.Intents.all()
-    bot = MyBot(command_prefix='/', intents=intents)
+# Configure logging for this main.py handler
+logger = logutil.init_logger("main.py")
+logger.debug(
+    "Debug mode is %s; This is not a warning, \
+just an indicator. You may safely ignore",
+    DEBUG,
+)
 
-    @bot.event
-    async def on_ready():
-        print(f'Bot connected as {bot.user} (id: {bot.user.id})')
-        guild = discord.utils.get(bot.guilds, id=guild_id)
-        if guild:
-            print(f'Connected to guild: {guild.name} (id: {guild.id})')
-        else:
-            print(f'Guild with id {guild_id} not found')
 
-    print("Starting bot...")
-    await bot.start(bot_token)
+if not os.environ.get("TOKEN"):
+    logger.critical("TOKEN variable not set. Cannot continue")
+    sys.exit(1)
 
-if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
+intents = interactions.Intents.ALL
+
+client = interactions.Client(
+    token=os.environ.get("TOKEN"),
+    intents=intents,
+    activity=interactions.Activity(
+        name="with interactions", type=interactions.ActivityType.PLAYING
+    ),
+    debug_scope=DEV_GUILD,
+)
+
+
+@interactions.listen()
+async def on_startup():
+    """Called when the bot starts"""
+    logger.info(f"Logged in as {client.user}")
+
+
+# get all python files in "extensions" folder
+extensions = [
+    f"extensions.{f[:-3]}"
+    for f in os.listdir("extensions")
+    if f.endswith(".py") and not f.startswith("_")
+]
+for extension in extensions:
+    try:
+        client.load_extension(extension)
+        logger.info(f"Loaded extension {extension}")
+    except interactions.errors.ExtensionLoadException as e:
+        logger.exception(f"Failed to load extension {extension}.", exc_info=e)
+
+client.start()
