@@ -1,0 +1,103 @@
+{
+    "squadron_roles": {
+        "1058215149212803112": {
+            "name": "ACG",
+            "recruiting": false
+        },
+        "857407881690873886": {
+            "name": "CAG",
+            "recruiting": false
+        },
+        "1058214580318380122": {
+            "name": "MAGTF",
+            "recruiting": false
+        },
+        "589664020676739083": {
+            "name": "VFA-119 (F/A-18C Hornet)",
+            "recruiting": true
+        },
+        "616400607212863542": {
+            "name": "583rd (F-15E Strike Eagle)",
+            "recruiting": true
+        },
+        "468322152395833344": {
+            "name": "VF-172 (F-14B Tomcat)",
+            "recruiting": true
+        },
+        "800858495271698510": {
+            "name": "VMGR-251 (Hercules)",
+            "recruiting": false
+        },
+        "468312897513324545": {
+            "name": "VMFA-390 (F/A-18C Hornet)",
+            "recruiting": true
+        },
+        "468346134310551573": {
+            "name": "142nd AHC (AH-64 Apache)",
+            "recruiting": true
+        },
+        "628726268099166231": {
+            "name": "472nd (F-16 Viper)",
+            "recruiting": true
+        },
+        "468313246953373717": {
+            "name": "484th (A-10 Warthog)",
+            "recruiting": true
+        },
+        "1241560726871478352": {
+            "name": "51st FIS (F-4 Phantom)",
+            "recruiting": true
+        },
+        "1252339038992470167": {
+            "name": "77th SOAR (OH-58 Kiowa)",
+            "recruiting": true
+        },
+        "1251988872045531226": {
+            "name": "33d (JF-17)",
+            "recruiting": true
+        },
+        "541444548828725248": {
+            "name": "Reserve",
+            "recruiting": false
+        }
+    },
+    "application_questions": [
+        {
+            "question": "Which Squadron are you applying to join?",
+            "response_type": "dropdown"
+        },
+        {
+            "question": "Requested Callsign (Answer this question as a reply to this DM)",
+            "response_type": "text"
+        },
+        {
+            "question": "Are you a member of another DCS Squadron? (NO MULTI-CLAN POLICY IN EFFECT)",
+            "response_type": "yes/no"
+        },
+        {
+            "question": "What style of play are you into when playing DCS?",
+            "response_type": "dropdown",
+            "options": [
+                "Casual",
+                "Military Simulation (MILSIM)"
+            ]
+        },
+        {
+            "question": "Are you already an accepted member of HVY?",
+            "response_type": "yes/no"
+        },
+        {
+            "question": "Are you a former member of Joint Task Force Heavy?",
+            "response_type": "yes/no"
+        },
+        {
+            "question": "Are you over the age of 18? By checking 'Yes', you are confirming your eligibility. If you are under 18, you will be removed from the Task Force.",
+            "response_type": "yes/no"
+        }
+    ],
+    "messages": {
+        "accepted_message": "Your application for Joint Task Force Heavy has been accepted",
+        "denied_message": "Your application for Joint Task Force Heavy has been denied",
+        "initial_message": "Welcome to the Joint Task Force Heavy New Recruit Application! If you are NOT already on our Discord server, please join us at https://discord.gg/sPavY3ZZQH before proceeding with your application.\n\n- We are an 18+ organization dedicated to providing a professional and mature environment.\n- Our NO MULTI-CLAN policy means you cannot be part of another DCS Squadron while with us. Please ensure you're ready to commit.\n- Mature behavior and English proficiency are required.\n- By joining, you automatically agree to our rules and standards.\n\nPlease complete the following application to be considered for membership. The process will start within 20 seconds of this message. You will have 60 minutes to finish the application once you start. If time runs out, you will need to start over. We look forward to learning more about you!"
+    }
+}
