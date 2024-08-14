@@ -5,6 +5,7 @@ from datetime import datetime
 import interactions
 import re
 import random
+import logging
 from interactions import Extension, listen, SlashContext, Client, ActionRow, StringSelectMenu, StringSelectOption, Button, ButtonStyle, ComponentContext, slash_command, Embed
 
 CSV_FILE = 'applications.csv'
@@ -172,9 +173,9 @@ class ApplicationHandler(Extension):
         for member in squadron_members:
             if squadron_role_id in [r.id for r in member.roles]:
                 if member.nick and "[HVY]CO" in member.nick:
-                    squadron_leadership["CO"] = member.mention
+                    squadron_leadership["CO"] = member.id
                 elif member.nick and "[HVY]XO" in member.nick:
-                    squadron_leadership["XO"] = member.mention
+                    squadron_leadership["XO"] = member.id
 
                 if squadron_leadership["CO"] and squadron_leadership["XO"]:
                     break
@@ -203,11 +204,11 @@ class ApplicationHandler(Extension):
                     requested_callsign = row["Requested Callsign"]
                     squadron_name = row["Which Squadron are you applying to join?"]
                     break
-        
+
         # Assign the squadron role based on the selected squadron
         for role_id, squadron in config["squadron_roles"].items():
             if squadron["name"] == squadron_name:
-                squadron_role_id = role_id
+                squadron_role_id = int(role_id)
                 break
 
         if not squadron_role_id:
@@ -244,14 +245,14 @@ class ApplicationHandler(Extension):
             await user.send(dm_message)
         except Exception as e:
             await handler_channel.send(f"Failed to send DM to {user.username}: {e}")
-        
+
         # Update the status in the CSV to "Accepted"
         self.update_application_status(user_id, "Accepted")
 
         # Fetch squadron leadership
         leadership = await self.get_squadron_leadership(guild, squadron_role_id)
-        co_mention = leadership.get("CO", "the CO")
-        xo_mention = leadership.get("XO", "the XO")
+        co_mention = f"<@{leadership.get('CO')}>" if leadership.get("CO") else "the CO"
+        xo_mention = f"<@{leadership.get('XO')}>" if leadership.get("XO") else "the XO"
 
         # Load announcement bodies
         with open(ANNOUNCEMENT_BODIES_FILE, 'r') as file:
