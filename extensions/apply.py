@@ -194,7 +194,7 @@ class ApplicationBot(Extension):
                 "Are you a member of another DCS Squadron?", 
                 "What style of play are you into when playing DCS?", 
                 "Are you already an accepted member of HVY?", 
-                "Are you a former member of Joint Task Force Heavy? Please explain if YES", 
+                "Are you a former member of Joint Task Force Heavy?", 
                 "Are you over the age of 18?", 
                 "Discord Username",
                 "User ID", 
